@@ -2,26 +2,55 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
+use App\Entity\Program;
 use App\Repository\CategoryRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-    /**
-     * @Route("/category", name="category_")
-     */
+/**
+ * 
+ * @Route("/category", name="category_")
+ */
 class CategoryController extends AbstractController
 {
+
     /**
+     * Undocumented function
      * @Route("/", name="index")
+     *
+     * @param CategoryRepository $categoryRepository
      */
     public function index(CategoryRepository $categoryRepository): Response
     {
         $category = $categoryRepository->findAll();
 
-
         return $this->render('category/index.html.twig', [
-            'categories' => $category,
+            'categories' => $category
         ]);
+    }
+
+
+    /**
+     * @Route("/{categoryName}", name="show")
+     */
+    public function show(string $categoryName)
+    {
+        $category = $this->getDoctrine()->getRepository(Category::class)->findOneBy(['name'=>$categoryName]);
+        
+        $programs = $this->getDoctrine()->getRepository(Program::class)->findBy(['Category'=> $category]);
+
+        if(!$category) {
+            throw $this->createNotFoundException(
+                ''.$categoryName.' n\'existe pas'
+            );  
+        }
+
+        return $this->render('category/show.html.twig', [
+            'category' => $category,
+            'programs' => $programs
+        ]);
+        
     }
 }

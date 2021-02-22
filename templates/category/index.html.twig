@@ -1,12 +1,15 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block title %}All categories!{% endblock %}
+{% block title %}
+    Category
+{% endblock title %}
 
 {% block body %}
+    
     {% for category in categories %}
         <div class="container">
             <h2>{{ category.name }}</h2>
+            <a href="{{ path('category_show', {categoryName : category.name}) }}">Details</a>
         </div>
     {% endfor %}
-
-{% endblock %}
+{% endblock body %}
