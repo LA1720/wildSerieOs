@@ -6,11 +6,13 @@ use App\Entity\Season;
 use App\Entity\Episode;
 use App\Entity\Program;
 use App\Entity\Category;
+use App\Form\ProgramType;
 use App\Repository\ProgramRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Undocumented class
@@ -28,6 +30,43 @@ class ProgramController extends AbstractController
         $programs = $this->getDoctrine()->getRepository(Program::class)->findAll();
         return $this->render('program/index.html.twig', [
             'programs' => $programs
+        ]);
+
+    }
+
+    /**
+     * @Route("/new", name="new")
+     */
+    public function new(Request $request)
+    {
+        //create new program object//
+        $program = new Program();
+
+        //Create a form to use Program entity//
+        $form = $this->createForm(ProgramType::class, $program);
+
+        //push the program form to http foundation request method//
+        $form->handleRequest($request);
+
+        //if press send button//
+        if($form->isSubmitted()){
+
+            //make connection with database for persist//
+            $entityManager = $this->getDoctrine()->getManager();
+
+            //persist form data into the Program entity in database //
+            $entityManager->persist($program);
+
+
+            $entityManager->flush();
+
+            
+            return $this->redirectToRoute('program_home');
+
+        }
+
+        return $this->render('program/new.html.twig', [
+            'form'=> $form->createView()
         ]);
 
     }
