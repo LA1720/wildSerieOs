@@ -49,6 +49,7 @@ class Program
     {
         $this->seasons = new ArrayCollection();
     }
+   
 
     public function getId(): ?int
     {

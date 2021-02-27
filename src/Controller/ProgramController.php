@@ -60,7 +60,7 @@ class ProgramController extends AbstractController
 
             $entityManager->flush();
 
-            
+
             return $this->redirectToRoute('program_home');
 
         }
@@ -122,7 +122,7 @@ class ProgramController extends AbstractController
      */
     public function showEpisode(Program $program, Season $season, Episode $episode)
     {
-        return $this->render('episode/show.html.twig', [
+        return $this->render('episodes/show.html.twig', [
             'program' => $program,
             'season' => $season,
             'episode' => $episode
